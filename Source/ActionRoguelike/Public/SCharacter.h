@@ -25,6 +25,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent *CameraComp;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ProjectileClass;
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -36,6 +39,8 @@ public:
 	void MoveForward(float val);
 
 	void MoveRight(float val);
+
+	void PrimaryAttack();
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
