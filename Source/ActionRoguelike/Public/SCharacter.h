@@ -6,11 +6,12 @@
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
+class USInteractionComponent;
 class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API ASCharacter : public ACharacter
+	class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -26,9 +27,19 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent *CameraComp;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
+	USInteractionComponent *InteractionComp;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> ProjectileClass;
 	
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnim;
+	
+	FTimerHandle TimerHandle_PrimaryAttack;
+
+	void PrimaryAttack_TimeElapsed();
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -39,9 +50,10 @@ public:
 	void MoveForward(float val);
 
 	void MoveRight(float val);
-
-	void PrimaryAttack();
 	
+	void PrimaryAttack();
+
+	void PrimaryInteract();
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
