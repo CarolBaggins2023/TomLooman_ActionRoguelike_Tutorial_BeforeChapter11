@@ -24,7 +24,10 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> MeshComp;
 
-	UPROPERTY(VisibleAnywhere)
+	// Note that VisibleAnyWhere refers to being visible in the "Details Panel",
+	// not visible in the "Blueprint Graph".
+	// For that we need to use "BlueReadOnly".
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<URadialForceComponent> ForceComp;
 
 	virtual void PostInitializeComponents() override;

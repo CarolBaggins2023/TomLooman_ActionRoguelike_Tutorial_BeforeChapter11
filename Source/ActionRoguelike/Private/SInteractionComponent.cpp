@@ -57,13 +57,13 @@ void USInteractionComponent::PrimaryInteract() {
 				APawn *MyPawn = Cast<APawn>(MyOwner);
 				ISGameplayInterface::Execute_Interact(HitActor, MyPawn);
 				// We only execute the interface on the first object that is hit.
+				// DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f);
 				break;
 			}
-			DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f);
 		}
 	}
 	
-	DrawDebugLine(GetWorld(), Start, End, LineColor, false, 2.0f, 0, 2.0f);
+	// DrawDebugLine(GetWorld(), Start, End, LineColor, false, 2.0f, 0, 2.0f);
 }
 
 

@@ -61,6 +61,11 @@ void ASCharacter::MoveRight(float val) {
 }
 
 void ASCharacter::PrimaryAttack() {
+	FRotator ControlRotator = GetControlRotation();
+	ControlRotator.Pitch = GetActorRotation().Pitch;
+	ControlRotator.Roll = GetActorRotation().Roll;
+	SetActorRotation(ControlRotator, ETeleportType::None);
+	
 	PlayAnimMontage(AttackAnim);
 
 	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeElapsed, 0.2f);
@@ -72,6 +77,7 @@ void ASCharacter::PrimaryAttack_TimeElapsed() {
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
 	
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 }
