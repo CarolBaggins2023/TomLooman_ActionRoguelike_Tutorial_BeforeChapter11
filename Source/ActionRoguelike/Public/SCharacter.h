@@ -19,6 +19,24 @@ public:
 	// Sets default values for this character's properties
 	ASCharacter();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	void MoveForward(float val);
+
+	void MoveRight(float val);
+	
+	void PrimaryAttack();
+
+	void DashAttack();
+	
+	void BlackholeAttack();
+
+	void PrimaryInteract();
+	
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 protected:
 
 	UPROPERTY(VisibleAnywhere)
@@ -31,31 +49,36 @@ protected:
 	USInteractionComponent *InteractionComp;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AActor> PrimaryProjectileClass;
+	
+	UPROPERTY(EditAnywhere, Category = "Attack");
+	TSubclassOf<AActor> DashProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack");
+	TSubclassOf<AActor> BlackholeProjectileClass;
 	
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
+
+	float AttackAnimDelay;
 	
 	FTimerHandle TimerHandle_PrimaryAttack;
 
+	FTimerHandle TimerHandle_Dash;
+
+	FTimerHandle TimerHandle_Backhole;
+
+	void TurnToAttackDirection();
+	
 	void PrimaryAttack_TimeElapsed();
+
+	void DashAttack_TimeElapsed();
+
+	void BlackholeAttack_TimeElapsed();
+
+	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	void MoveForward(float val);
-
-	void MoveRight(float val);
 	
-	void PrimaryAttack();
-
-	void PrimaryInteract();
-	
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 };
