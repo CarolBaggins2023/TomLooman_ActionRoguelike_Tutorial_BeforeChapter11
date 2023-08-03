@@ -24,7 +24,5 @@ void ASBlackholeProjectile::BeginPlay() {
 }
 
 void ASBlackholeProjectile::SelfDestroy() {
-    SphereComp->OverlapComponent()
-    
     Destroy();
 }
