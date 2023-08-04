@@ -35,7 +35,6 @@ void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Oth
 	FVector NormalImpulse, const FHitResult& Hit) {
 	// Note that we don't call Explode_Implementation, because that is just how we implement Explode in C++,
 	// we may still implement Explode in Blueprint.
-	UE_LOG(LogTemp, Warning, TEXT("HitSomething."));
 	Explode();
 }
 

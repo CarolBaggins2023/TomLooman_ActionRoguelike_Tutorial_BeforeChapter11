@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
+class USAttributeComponent;
 class USInteractionComponent;
 class UCameraComponent;
 class USpringArmComponent;
@@ -33,6 +34,8 @@ public:
 	void BlackholeAttack();
 
 	void PrimaryInteract();
+
+	void Accelarate();
 	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -48,6 +51,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent *InteractionComp;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	USAttributeComponent *AttributeComp;
+
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> PrimaryProjectileClass;
 	
@@ -61,6 +67,8 @@ protected:
 	UAnimMontage* AttackAnim;
 
 	float AttackAnimDelay;
+
+	bool bIsAccelerating;
 	
 	FTimerHandle TimerHandle_PrimaryAttack;
 

@@ -11,6 +11,7 @@ ASBlackholeProjectile::ASBlackholeProjectile() {
     SphereComp->SetCollisionResponseToAllChannels(ECR_Overlap);
 
     ForceComp = CreateDefaultSubobject<URadialForceComponent>("ForceComp");
+    ForceComp->RemoveObjectTypeToAffect(TEnumAsByte<EObjectTypeQuery>(ECC_Pawn));
     ForceComp->SetupAttachment(RootComponent);
 
     DestroyDelay = 5.0f;

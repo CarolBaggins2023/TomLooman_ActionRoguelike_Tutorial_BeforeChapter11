@@ -3,6 +3,7 @@
 
 #include "ActionRoguelike/Public/SCharacter.h"
 
+#include "SAttributeComponent.h"
 #include "SDashProjectile.h"
 #include "SInteractionComponent.h"
 #include "Camera/CameraComponent.h"
@@ -22,12 +23,17 @@ ASCharacter::ASCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
 
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-	this->bUseControllerRotationYaw = false;
-
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
 
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+	
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	this->bUseControllerRotationYaw = false;
+	
 	AttackAnimDelay = 0.2f;
+
+	bIsAccelerating = false;
+	
 }
 
 // Called when the game starts or when spawned
@@ -158,6 +164,15 @@ void ASCharacter::PrimaryInteract() {
 	}
 }
 
+void ASCharacter::Accelarate() {
+	if (bIsAccelerating) {
+		GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+	} else {
+		GetCharacterMovement()->MaxWalkSpeed = 1200.0f;
+	}
+	bIsAccelerating = !bIsAccelerating;
+}
+
 // Called to bind functionality to input
 void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -172,6 +187,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("DashAttack", IE_Pressed, this, &ASCharacter::DashAttack);
 	PlayerInputComponent->BindAction("BlackholeAttack", IE_Pressed, this, &ASCharacter::BlackholeAttack);
+	PlayerInputComponent->BindAction("Accelerating", IE_Pressed, this, &ASCharacter::Accelarate);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 

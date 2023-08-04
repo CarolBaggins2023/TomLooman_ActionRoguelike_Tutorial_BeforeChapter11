@@ -41,7 +41,11 @@ public:
 	// which means it will be used in Blueprint.
 	// So, it must be marked with UFUNCTION in order to 'bind' the event.
 	// The meaning of its parameters are ignored now for simplicity.
+	// UFUNCTION()
+	// void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	// 	FVector NormalImpulse, const FHitResult& Hit);
+
 	UFUNCTION()
-	void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		FVector NormalImpulse, const FHitResult& Hit);
+	void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

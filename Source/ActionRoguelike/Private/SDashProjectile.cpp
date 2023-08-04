@@ -32,7 +32,7 @@ void ASDashProjectile::Explode_Implementation() {
 
 	MoveComp->StopMovementImmediately();
 	SetActorEnableCollision(false);
-
+	
 	FTimerHandle TimerHandle_DelayedTeleport;
 	GetWorldTimerManager().SetTimer(TimerHandle_DelayedTeleport, this, &ASDashProjectile::TeleportInstigator,
 		TeleportDelay);
@@ -42,6 +42,7 @@ void ASDashProjectile::TeleportInstigator() {
 	AActor *ActorToTeleport = GetInstigator();
 	if (ensure(ActorToTeleport)) {
 		// Keep instigator's rotation
-		ActorToTeleport->TeleportTo(GetActorLocation(), ActorToTeleport->GetActorRotation(), false, false);
+		ActorToTeleport->SetActorLocation(GetActorLocation());
+		//ActorToTeleport->TeleportTo(GetActorLocation(), ActorToTeleport->GetActorRotation(), false, false);
 	}
 }

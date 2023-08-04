@@ -3,6 +3,7 @@
 
 #include "SExplosiveBarrel.h"
 
+#include "SAttributeComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
@@ -43,7 +44,8 @@ void ASExplosiveBarrel::PostInitializeComponents() {
 	Super::PostInitializeComponents();
 	// OnComponentHit will be triggered when the component hits or is hit.
 	// AddDynamic is a kind of delegates.
-	this->MeshComp->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnActorHit);
+	// this->MeshComp->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnActorHit);
+	this->MeshComp->OnComponentBeginOverlap.AddDynamic(this, &ASExplosiveBarrel::OnActorOverlap);
 }
 
 // Called every frame
@@ -53,15 +55,40 @@ void ASExplosiveBarrel::Tick(float DeltaTime)
 
 }
 
-void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+/*void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	FVector NormalImpulse, const FHitResult& Hit) {
+	// It will fire a single impulse.
+	// ForceComp->FireImpulse();
+
+	UE_LOG(LogTemp, Log, TEXT("Hi"));
+	// It will have some log functions.
+	FString CombinedString = FString::Printf(TEXT("Hit at location: %s"), *Hit.ImpactPoint.ToString());
+	DrawDebugString(GetWorld(), Hit.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.0f, true);
+
+	if (IsValid(OtherActor)) {
+		USAttributeComponent *AttributeComponent = Cast<USAttributeComponent>(
+			OtherActor->GetComponentByClass(USAttributeComponent::StaticClass())
+			);
+		if (IsValid(AttributeComponent)) {
+			AttributeComponent->ApplyHealthChange(-50.0f);
+		}
+	}
+	
+}*/
+
+void ASExplosiveBarrel::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	// It will fire a single impulse.
 	ForceComp->FireImpulse();
 
-	// It will have some log functions.
-	UE_LOG(LogTemp, Log, TEXT("OnActorHit in Explosive Barrel"));
-	UE_LOG(LogTemp, Warning, TEXT("OtherActor: %s, at game time %f"),
-		*GetNameSafe(OtherActor), GetWorld()->TimeSeconds);
-	FString CombinedString = FString::Printf(TEXT("Hit at location: %s"), *Hit.ImpactPoint.ToString());
-	DrawDebugString(GetWorld(), Hit.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.0f, true);
+	UE_LOG(LogTemp, Log, TEXT("Hi"));
+
+	if (IsValid(OtherActor)) {
+		USAttributeComponent *AttributeComponent = Cast<USAttributeComponent>(
+			OtherActor->GetComponentByClass(USAttributeComponent::StaticClass())
+			);
+		if (IsValid(AttributeComponent)) {
+			AttributeComponent->ApplyHealthChange(-50.0f);
+		}
+	}
 }
