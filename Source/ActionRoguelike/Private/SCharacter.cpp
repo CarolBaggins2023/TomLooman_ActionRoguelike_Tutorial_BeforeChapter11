@@ -7,8 +7,10 @@
 #include "SDashProjectile.h"
 #include "SInteractionComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Physics/PhysicsFiltering.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -36,18 +38,10 @@ ASCharacter::ASCharacter()
 	
 }
 
-// Called when the game starts or when spawned
-void ASCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
+void ASCharacter::PostInitializeComponents() {
+	Super::PostInitializeComponents();
 
-// Called every frame
-void ASCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+	AttributeComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 }
 
 void ASCharacter::MoveForward(float val) {
@@ -194,5 +188,14 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 }
 
+void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth,
+	float Delta) {
+	if (NewHealth <= 0.0f) {
+		APlayerController *PC = Cast<APlayerController>(GetController());
+		DisableInput(PC);
+		
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	} 
+}
 
 

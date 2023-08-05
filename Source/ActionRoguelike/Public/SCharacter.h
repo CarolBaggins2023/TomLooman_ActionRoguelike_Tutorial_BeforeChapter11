@@ -20,9 +20,6 @@ public:
 	// Sets default values for this character's properties
 	ASCharacter();
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	void MoveForward(float val);
 
 	void MoveRight(float val);
@@ -86,7 +83,10 @@ protected:
 
 	void SpawnProjectile(TSubclassOf<AActor> ClassToSpawn);
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UFUNCTION()
+	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp,
+		float NewHealth, float Delta);
+
+	virtual void PostInitializeComponents() override;
 	
 };
