@@ -10,6 +10,8 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Physics/PhysicsFiltering.h"
 
 // Sets default values
@@ -28,6 +30,8 @@ ASCharacter::ASCharacter()
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
 
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+
+	MuzzleFlash = CreateDefaultSubobject<UParticleSystem>("MuzzleFlash");
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	this->bUseControllerRotationYaw = false;
@@ -72,6 +76,11 @@ void ASCharacter::TurnToAttackDirection() {
 void ASCharacter::PrimaryAttack() {
 	TurnToAttackDirection();
 	PlayAnimMontage(AttackAnim);
+	
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, GetMesh(), FName(TEXT("Muzzle_01")));
+
+	APlayerController * PC = Cast<APlayerController>(GetController());
+	PC->ClientStartCameraShake(CameraShake_PrimaryAttack);
 
 	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this,
 		&ASCharacter::PrimaryAttack_TimeElapsed, AttackAnimDelay);
@@ -190,12 +199,13 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth,
 	float Delta) {
+	if (Delta < 0.0f) {
+		GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
+	}
 	if (NewHealth <= 0.0f) {
 		APlayerController *PC = Cast<APlayerController>(GetController());
 		DisableInput(PC);
 		
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	} 
+	}
 }
-
-

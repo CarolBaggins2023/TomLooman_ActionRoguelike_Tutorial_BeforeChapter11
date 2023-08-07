@@ -4,19 +4,25 @@
 #include "SMagicProjectile.h"
 
 #include "SAttributeComponent.h"
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
 ASMagicProjectile::ASMagicProjectile()
 {
+	
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ASMagicProjectile::OnActorOverlap);
 	
-	MoveComp->InitialSpeed = 1000.0f;
+	MoveComp->InitialSpeed = 3000.0f;
+}
+
+void ASMagicProjectile::BeginPlay() {
+	Super::BeginPlay();
 }
 
 void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	if (IsValid(OtherActor) && OtherActor != GetInstigator()) {
 		USAttributeComponent *AttributeComp = Cast<USAttributeComponent>(
 			OtherActor->GetComponentByClass(USAttributeComponent::StaticClass())
@@ -25,7 +31,10 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 			AttributeComp->ApplyHealthChange(-20.0f);
 
 			Explode();
+			UE_LOG(LogTemp, Log, TEXT("AA"));
 		}
 	}
 }
+
+
 

@@ -29,6 +29,8 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	this->ForceComp->bImpulseVelChange = true;
 	// By default, Pawn, PhysicsBody, Vehicle and Destructible are added.
 	this->ForceComp->AddCollisionChannelToAffect(ECC_WorldDynamic);
+
+	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +48,24 @@ void ASExplosiveBarrel::PostInitializeComponents() {
 	// AddDynamic is a kind of delegates.
 	// this->MeshComp->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnActorHit);
 	this->MeshComp->OnComponentBeginOverlap.AddDynamic(this, &ASExplosiveBarrel::OnActorOverlap);
+
+	AttributeComp->OnHealthChanged.AddDynamic(this, &ASExplosiveBarrel::OnHealthChanged);
+}
+
+void ASExplosiveBarrel::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwningComp, float NewHealth,
+	float Delta) {
+	ForceComp->FireImpulse();
+
+	UE_LOG(LogTemp, Log, TEXT("Hi"));
+
+	if (IsValid(InstigatorActor)) {
+		USAttributeComponent *AttributeComponent = Cast<USAttributeComponent>(
+			InstigatorActor->GetComponentByClass(USAttributeComponent::StaticClass())
+			);
+		if (IsValid(AttributeComponent)) {
+			AttributeComponent->ApplyHealthChange(-50.0f);
+		}
+	}
 }
 
 // Called every frame
@@ -79,16 +99,5 @@ void ASExplosiveBarrel::Tick(float DeltaTime)
 void ASExplosiveBarrel::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	// It will fire a single impulse.
-	ForceComp->FireImpulse();
-
-	UE_LOG(LogTemp, Log, TEXT("Hi"));
-
-	if (IsValid(OtherActor)) {
-		USAttributeComponent *AttributeComponent = Cast<USAttributeComponent>(
-			OtherActor->GetComponentByClass(USAttributeComponent::StaticClass())
-			);
-		if (IsValid(AttributeComponent)) {
-			AttributeComponent->ApplyHealthChange(-50.0f);
-		}
-	}
+	AttributeComp->ApplyHealthChange(-100.0f);
 }

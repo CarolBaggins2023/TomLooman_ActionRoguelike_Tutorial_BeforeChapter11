@@ -3,6 +3,7 @@
 
 #include "SProjectileBase.h"
 
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -29,6 +30,11 @@ ASProjectileBase::ASProjectileBase()
 	MoveComp->ProjectileGravityScale = 0.0f;
 	MoveComp->bRotationFollowsVelocity = true;
 	MoveComp->bInitialVelocityInLocalSpace = true;
+
+	FlightSound = CreateDefaultSubobject<UAudioComponent>("FlightSound");
+	FlightSound->SetupAttachment(RootComponent);
+
+	ImpactSound = CreateDefaultSubobject<UAudioComponent>("ImpactSound");
 }
 
 void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -41,6 +47,7 @@ void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Oth
 void ASProjectileBase::Explode_Implementation() {
 	if (ensure(IsValid(this))) {
 		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound->Sound, GetActorLocation());
 		Destroy();
 	}
 }
@@ -54,6 +61,8 @@ void ASProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
 	SphereComp->IgnoreActorWhenMoving(GetInstigator(), true);
+
+	FlightSound->Activate();
 }
 
 // Called every frame

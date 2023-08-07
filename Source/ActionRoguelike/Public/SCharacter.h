@@ -48,6 +48,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent *InteractionComp;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Effects");
+	UParticleSystem *MuzzleFlash;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USAttributeComponent *AttributeComp;
 
@@ -62,6 +65,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	TSubclassOf<UCameraShakeBase> CameraShake_PrimaryAttack;
 
 	float AttackAnimDelay;
 

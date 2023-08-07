@@ -32,6 +32,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UProjectileMovementComponent *MoveComp;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+	UAudioComponent *FlightSound;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+	UAudioComponent *ImpactSound;
 	
 	UFUNCTION()
 	virtual void OnActorHit(UPrimitiveComponent *HitComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp,
