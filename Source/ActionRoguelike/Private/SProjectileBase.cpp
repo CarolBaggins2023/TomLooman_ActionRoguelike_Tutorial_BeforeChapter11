@@ -49,6 +49,9 @@ void ASProjectileBase::Explode_Implementation() {
 		UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound->Sound, GetActorLocation());
 		Destroy();
+		
+		APlayerController * PC = Cast<APlayerController>(GetWorld()->GetFirstPlayerController());
+		PC->ClientStartCameraShake(CameraShake);
 	}
 }
 

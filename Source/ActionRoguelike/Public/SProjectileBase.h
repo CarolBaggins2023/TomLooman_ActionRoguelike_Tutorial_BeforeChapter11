@@ -23,6 +23,9 @@ protected:
 	// VFX refers to 'visual effects'.
 	UPROPERTY(EditDefaultsOnly, Category = "Effect")
 	UParticleSystem *ImpactVFX;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effect")
+	TSubclassOf<UCameraShakeBase> CameraShake;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USphereComponent *SphereComp;

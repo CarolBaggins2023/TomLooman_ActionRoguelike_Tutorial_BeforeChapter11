@@ -39,6 +39,8 @@ ASCharacter::ASCharacter()
 	AttackAnimDelay = 0.2f;
 
 	bIsAccelerating = false;
+
+	RightHandSocketName = "Muzzle_01";
 	
 }
 
@@ -77,10 +79,7 @@ void ASCharacter::PrimaryAttack() {
 	TurnToAttackDirection();
 	PlayAnimMontage(AttackAnim);
 	
-	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, GetMesh(), FName(TEXT("Muzzle_01")));
-
-	APlayerController * PC = Cast<APlayerController>(GetController());
-	PC->ClientStartCameraShake(CameraShake_PrimaryAttack);
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, GetMesh(), FName(RightHandSocketName));
 
 	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this,
 		&ASCharacter::PrimaryAttack_TimeElapsed, AttackAnimDelay);
@@ -117,7 +116,7 @@ void ASCharacter::BlackholeAttack_TimeElapsed() {
 void ASCharacter::SpawnProjectile(TSubclassOf<AActor> ClassToSpawn) {
 	if (ensureAlways(ClassToSpawn)) {
 		// Get Start and End vector to construct rotator.
-		FVector RightHandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+		FVector RightHandLocation = GetMesh()->GetSocketLocation(FName(RightHandSocketName));
 		FVector Start = RightHandLocation;
 		// Get End vector is somewhat troublesome.
 
